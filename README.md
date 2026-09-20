@@ -14,3 +14,7 @@ cd code
 mvn verify
 mvn javafx:run
 ```
+
+## Lab 4
+
+CI pipeline and branch protection are configured for Project 1.
