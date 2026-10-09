@@ -37,3 +37,5 @@ The MVP includes all priority 1 and 2 user stories, implemented as a JavaFX appl
 - **Spending Summary window:** shows total spending for each category, total spending within a selected date range, and the total of tax-related receipt entries.
 
 Priority 3 through 5 user stories are outside the MVP.
+
+See `Wireframe_and_Class_Diagram.png` for the window layouts, navigation between windows, and the partial class diagram.
