@@ -1,5 +1,7 @@
 package edu.westga.comp4420.receiptready.model;
 
+import java.time.LocalDate;
+
 /**
  * Calculates spending totals from the receipt entries in a receipt book.
  *
@@ -8,6 +10,9 @@ package edu.westga.comp4420.receiptready.model;
  */
 public class ReceiptSummary {
 	public static final String RECEIPT_BOOK_REQUIRED = "Receipt book is required.";
+	public static final String START_DATE_REQUIRED = "Start date is required.";
+	public static final String END_DATE_REQUIRED = "End date is required.";
+	public static final String START_AFTER_END = "Start date must not be after the end date.";
 
 	private final ReceiptBook receiptBook;
 
@@ -44,6 +49,56 @@ public class ReceiptSummary {
 		double total = 0;
 		for (Receipt receipt : this.receiptBook.getReceipts()) {
 			if (receipt.getCategory() == category) {
+				total += receipt.getAmount();
+			}
+		}
+		return total;
+	}
+
+	/**
+	 * Calculates the total amount spent between two dates. Both dates are
+	 * included in the range.
+	 *
+	 * @precondition start != null && end != null && !start.isAfter(end)
+	 * @postcondition none
+	 *
+	 * @param start the first day of the range
+	 * @param end   the last day of the range
+	 *
+	 * @return the sum of the amounts of all receipts dated from start through end
+	 */
+	public double totalBetween(LocalDate start, LocalDate end) {
+		if (start == null) {
+			throw new IllegalArgumentException(START_DATE_REQUIRED);
+		}
+		if (end == null) {
+			throw new IllegalArgumentException(END_DATE_REQUIRED);
+		}
+		if (start.isAfter(end)) {
+			throw new IllegalArgumentException(START_AFTER_END);
+		}
+		double total = 0;
+		for (Receipt receipt : this.receiptBook.getReceipts()) {
+			LocalDate date = receipt.getDate();
+			if (!date.isBefore(start) && !date.isAfter(end)) {
+				total += receipt.getAmount();
+			}
+		}
+		return total;
+	}
+
+	/**
+	 * Calculates the total amount of all tax-related receipt entries.
+	 *
+	 * @precondition none
+	 * @postcondition none
+	 *
+	 * @return the sum of the amounts of all tax-related receipts
+	 */
+	public double totalTaxRelated() {
+		double total = 0;
+		for (Receipt receipt : this.receiptBook.getReceipts()) {
+			if (receipt.isTaxRelated()) {
 				total += receipt.getAmount();
 			}
 		}
