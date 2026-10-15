@@ -15,6 +15,7 @@ Priorities were updated based on the Lab 2 proposal feedback to focus on editing
 | 2 | Owner | view total spending for each category | I can see which areas of the business cost the most |
 | 2 | Owner | view total spending within a date range | I can review a month or quarter of purchases |
 | 2 | Owner | view the total of tax-related receipt entries | I know how much to report for tax preparation |
+| 2 | Owner | search receipt entries by vendor | I can quickly find purchases from a specific store |
 | 3 | Owner | filter receipt entries by category | I can review purchases in one area of the business |
 | 3 | Owner | add a short note to a receipt entry | I can remember the business purpose of a purchase |
 | 3 | Owner | save my receipt entries to a file | I keep my records between uses of the application |
