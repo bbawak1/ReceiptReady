@@ -1,6 +1,6 @@
 package edu.westga.comp4420.receiptready;
 
-import edu.westga.comp4420.receiptready.view.MainWindow;
+import edu.westga.comp4420.receiptready.view.ReceiptListPage;
 import javafx.application.Application;
 
 /**
@@ -20,6 +20,6 @@ public final class Main {
 	 * @param args command line arguments
 	 */
 	public static void main(String[] args) {
-		Application.launch(MainWindow.class, args);
+		Application.launch(ReceiptListPage.class, args);
 	}
 }
