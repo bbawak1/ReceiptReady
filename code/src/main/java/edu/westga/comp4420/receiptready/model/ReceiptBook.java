@@ -13,7 +13,8 @@ import java.util.List;
 public class ReceiptBook {
 	public static final String RECEIPT_REQUIRED = "Receipt is required.";
 	public static final String RECEIPT_ALREADY_ADDED = "Receipt is already in the receipt book.";
-
+	public static final String SEARCH_TEXT_REQUIRED = "Search text is required.";
+		
 	private final List<Receipt> receipts;
 
 	/**
@@ -72,6 +73,31 @@ public class ReceiptBook {
 	 */
 	public List<Receipt> getReceipts() {
 		return Collections.unmodifiableList(this.receipts);
+	}
+	
+	/**
+	 * Finds receipt(s) with vendor names containing the search text and ignoring upper or lower case.
+	 *
+	 * @precondition text != null
+	 * @postcondition none
+	 *
+	 * @param text the vendor name or part of the vendor name to search for
+	 *
+     * @return a list of receipts with matching vendor names
+	 */
+	public List<Receipt> searchByVendor(String text) {
+		if (text == null) {
+			throw new IllegalArgumentException(SEARCH_TEXT_REQUIRED);
+		}
+		String searchText = text.strip().toLowerCase();
+		List<Receipt> matches = new ArrayList<Receipt>();
+
+		for (Receipt receipt : this.receipts) {
+			if (receipt.getVendor().toLowerCase().contains(searchText)) {
+				matches.add(receipt);
+			}
+		}
+		return matches;
 	}
 
 	/**
