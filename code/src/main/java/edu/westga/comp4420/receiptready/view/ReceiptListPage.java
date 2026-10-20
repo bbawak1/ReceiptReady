@@ -13,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -31,6 +32,7 @@ public class ReceiptListPage extends Application {
 	private final ReceiptSummary summary;
 	private final TableView<Receipt> receiptTable;
 	private final Label statusLabel;
+	private final TextField searchField;
 	private Stage stage;
 
 	/**
@@ -44,6 +46,7 @@ public class ReceiptListPage extends Application {
 		this.summary = new ReceiptSummary(this.receiptBook);
 		this.receiptTable = new TableView<Receipt>();
 		this.statusLabel = new Label();
+		this.searchField = new TextField();
 	}
 
 	/**
@@ -59,9 +62,9 @@ public class ReceiptListPage extends Application {
 		this.stage = primaryStage;
 		this.buildTable();
 		VBox.setVgrow(this.receiptTable, Priority.ALWAYS);
-		VBox layout = new VBox(12, this.receiptTable, this.statusLabel, this.buildButtons());
+		VBox layout = new VBox(12, this.buildSearchBar(), this.receiptTable, this.statusLabel, this.buildButtons());
 		layout.setPadding(new Insets(16));
-
+		
 		this.stage.setTitle("ReceiptReady - Receipt List");
 		this.stage.setScene(new Scene(layout, 640, 460));
 		this.stage.show();
@@ -96,7 +99,28 @@ public class ReceiptListPage extends Application {
 		HBox.setHgrow(spacer, Priority.ALWAYS);
 		return new HBox(10, addButton, editButton, deleteButton, spacer, summaryButton);
 	}
+	
+	private HBox buildSearchBar() {
+		this.searchField.setPromptText("Search by vendor");
+		this.searchField.setOnAction(event -> this.handleSearch());
+		HBox.setHgrow(this.searchField, Priority.ALWAYS);
+		Button searchButton = new Button("Search");
+		searchButton.setOnAction(event -> this.handleSearch());
+		Button clearButton = new Button("Clear");
+		clearButton.setOnAction(event -> this.handleClear());
+		return new HBox(10, this.searchField, searchButton, clearButton);
+	}
+	
+	private void handleSearch() {
+		this.receiptTable.getItems().setAll(this.receiptBook.searchByVendor(this.searchField.getText()));
+		this.statusLabel.setText(this.receiptTable.getItems().size() + " receipt(s) found");
+	}
 
+	private void handleClear() {
+		this.searchField.clear();
+		this.refreshReceipts();
+	}
+	
 	private void handleAdd() {
 		new ReceiptDetailsPage(this.stage, this.receiptBook, null).showAndWait();
 		this.refreshReceipts();
