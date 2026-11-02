@@ -1,5 +1,7 @@
+// Importing the helper that holds the account and login logic
+var helper = require('./account_helper');
 
- // Set up Express and use EJS to display our pages
+// Setting up Express and also using EJS to display our pages
 var express = require('express');
 var app = express();
 app.set('view engine', 'ejs');
@@ -8,14 +10,13 @@ app.set('view engine', 'ejs');
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Connect to our SQLite database
+// Connecting to the SQLite database
 // If the database doesn't exist, SQLite will create it
 var sqlite3 = require('sqlite3');
 var db = new sqlite3.Database(__dirname + '/users.db');
 
-// Create a table to store usernames and passwords
-// if we don't already have one
-db.run('CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT NOT NULL)');
+
+helper.setupDatabase(db);
 
 // When someone visits the website, send them to the login page
 app.get('/', function(req, res) {
@@ -30,21 +31,15 @@ app.get('/login', function(req, res) {
 // Check if the username and password match an existing account
 app.post('/login', function(req, res) {
     var username = req.body.username;
-    var password = req.body.password;
-
-    var sql = 'SELECT username FROM users WHERE username = ? AND password = ?';
-
-    db.get(sql, [username, password], function(err, row) {
+    helper.checkLogin(db, username, req.body.password, function(error) {
         // If the login information is wrong, show an error
-        if (err || !row) {
-            res.render('page/login', {
-                error: 'Invalid username or password.'
-            });
+        if (error) {
+            res.render('page/login', { error: error });
             return;
         }
 
         // If the login works, send the user to the landing page
-        res.redirect('/landing?username=' + encodeURIComponent(row.username));
+        res.redirect('/landing?username=' + encodeURIComponent(username));
     });
 });
 
@@ -56,24 +51,10 @@ app.get('/create', function(req, res) {
 // Save a new user's information in the database
 app.post('/create', function(req, res) {
     var username = (req.body.username || '').trim();
-    var password = req.body.password || '';
-
-    // Make sure both fields have been filled out
-    if (username === '' || password === '') {
-        res.render('page/create', {
-            error: 'Name and password are required.'
-        });
-        return;
-    }
-
-    var sql = 'INSERT INTO users (username, password) VALUES (?, ?)';
-
-    db.run(sql, [username, password], function(err) {
+    helper.createAccount(db, username, req.body.password, function(error) {
         // Show an error if the account can't be created
-        if (err) {
-            res.render('page/create', {
-                error: 'An account with that name already exists.'
-            });
+        if (error) {
+            res.render('page/create', { error: error });
             return;
         }
 
@@ -95,7 +76,7 @@ app.get('/landing', function(req, res) {
     });
 });
 
-// Start the application on port 8080
+// Starting the application
 app.listen(8080, function() {
     console.log('App listening on port 8080!');
 });
