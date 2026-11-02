@@ -1,0 +1,25 @@
+{
+  "name": "login-app",
+  "version": "1.0.0",
+  "description": "Login and account creation web app with a SQLite database",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "jest"
+  },
+  "engines": {
+    "node": "23.11.0",
+    "npm": "10.9.2"
+  },
+  "author": "Bernard Bawak",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "bootstrap": "^4.2.1",
+    "ejs": "^3.1.10",
+    "express": "^4.16.4",
+    "jest": "^29.7.0",
+    "jquery": "^3.3.1",
+    "sqlite3": "^6.0.1"
+  }
+}
