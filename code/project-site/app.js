@@ -18,8 +18,9 @@ app.get('/docs', function(req, res) {
     res.render('page/docs');
 });
 //start the web app
-app.listen(8080, function () {
-	console.log('App listening on port 8080!');
+var port = process.env.PORT || 8080;
+app.listen(port, function () {
+	console.log('App listening on port ' + port + '!');
 });
 
 // route to quickstart page
